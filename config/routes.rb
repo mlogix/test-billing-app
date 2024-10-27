@@ -10,4 +10,6 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   root to: "welcome#index"
+
+  resources :payment_intents, only: %i[create]
 end
