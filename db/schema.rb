@@ -10,5 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 0) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_27_124245) do
+  create_table "allocations", force: :cascade do |t|
+    t.integer "subscription_id", null: false
+    t.integer "payment_id", null: false
+    t.decimal "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payment_id"], name: "index_allocations_on_payment_id"
+    t.index ["subscription_id"], name: "index_allocations_on_subscription_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.integer "subscription_id"
+    t.datetime "charge_on"
+    t.boolean "partial"
+    t.integer "initial_payment_id"
+    t.decimal "amount"
+    t.boolean "succeed"
+    t.datetime "charged_at"
+    t.json "gateway_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["initial_payment_id"], name: "index_payments_on_initial_payment_id"
+    t.index ["subscription_id"], name: "index_payments_on_subscription_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "allocations", "payments"
+  add_foreign_key "allocations", "subscriptions"
 end
